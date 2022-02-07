@@ -10,9 +10,14 @@
 	onMount(async () => {
 		today = get_week_and_day()
 		teams = await window["feathers"].service("schedule").find();
+
+		for (let i = teams.length - 1; i >= 0; i--) {
+			
+		}
+
 	});
 
-  let week: number = today.week;
+  let week: number = today.week-1;
   let amount_of_weeks: number = 1;
 
 	function load_next_week() {
@@ -62,16 +67,20 @@
 {#each week_arr as week_nr}
   <h1 class="m-5 text-blue-400 text-[44px] font-semibold">Uge {week_nr}</h1>
   {#each lang_days as day}
-		<div transition:fade>
+		<div transition:fade={{duration: 700 }}>
 			{#if !free_days.includes(day.dk + week_nr)}
 				<h1 class="m-5 text-{(today.day == day.dk && week_nr == today.week) ? 'red':'green'}-400 text-[32px] font-semibold">{day.dk}</h1>
 				{#each teams as team}
 					{#if team.week == week_nr}
 						{#each team.lessons as lesson}
 							{#if lesson.day == day.dk}
-								<div class="bg-slate-800 { (team.title == "Træning") ? 'bg-zinc-900':''} rounded p-5 m-5">
+								<div class="bg-slate-800 {(team.title == "Træning") ? '':''} rounded p-5 m-5">
 									<div class="col-span-9">
 										<h1 class="text-xl text-gray-300">{team.title}</h1>
+										<!-- <h2 class="text-base text-gray-400"> Underviser: { team.teacher } </h2> -->
+										{#if lesson.note}
+											<h2 class="text-base text-gray-400"> Note: { lesson?.note } </h2>
+										{/if}
 										<span class="text-gray-500">
 											<span>{lesson.start}</span> - <span>{lesson.end}</span>
 										</span>
