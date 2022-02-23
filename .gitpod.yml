@@ -2,14 +2,15 @@
 image:
   file: .gitpod.dockerfile
 tasks:
-  - init: | 
+  - init: |
+      sudo /etc/init.d/postgresql start  
       cd server
-      πmix deps.get
+      mix deps.get
       mix ecto.migrate
     command: mix phx.server
-# List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
+# List the ports to expose. Learn more https://www.gitpod.io/docs/sudo /etc/init.d/postgresqlconfig-ports/
 ports:
   - port: 3000
     onOpen: open-preview
-  - port: 3030-4000
+  - port: 3030-6000
     onOpen: ignore
