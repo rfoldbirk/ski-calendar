@@ -66,15 +66,25 @@ defmodule API.Team do
     end
   end
 
-  def get_team_lessons_by_week(week_nr) do
-    IO.inspect App.Repo.get(Team, 2) |> App.Repo.preload(:lessons)
-
-    teams = App.Repo.all(
+  defp get_team(week) do
+    team_with_lessons =
       from t in Team,
-      where: t.week == ^week_nr or t.week == 0,
-      preload: :lessons
-    ))
+        join: l in Lesson, as: :lesson, on: l.team_id == t.id
 
-    %{"something": true}
+    from [t, lesson: l] in team_with_lessons, select: %{
+      title: t.title,
+      week: t.week,
+      lesson: %{
+        day: l.day,
+        start_time: l.start_time,
+        end_time: l.end_time
+      }
+    }
+  end
+
+  def get_team_lessons_by_week(week_nr) do
+    get_team(week_nr)
+      |> App.Repo.all
+      # |> IO.inspect
   end
 end
