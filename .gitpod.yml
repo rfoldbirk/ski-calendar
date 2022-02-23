@@ -2,11 +2,9 @@
 image:
   file: .gitpod.dockerfile
 tasks:
-  - init: echo 'init script' # runs during prebuild
-    command: echo 'start script'
   - init: | 
       cd server
-      mix deps.get
+      πmix deps.get
       mix ecto.migrate
     command: mix phx.server
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
