@@ -20,8 +20,9 @@ defmodule App.Repo.Migrations.CreateTeams do
 
 
     create table(:teams_persons) do
-      add :team_id, references(:teams)
-      add :person_id, references(:persons)
+      add :team_id, references(:teams, on_delete: :delete_all)
+      add :person_id, references(:persons, on_delete: :delete_all)
+      add :is_student, :boolean, default: true
     end
 
     create unique_index(:teams_persons, [:team_id, :person_id])

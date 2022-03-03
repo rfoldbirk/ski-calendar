@@ -9,7 +9,7 @@ defmodule App.Repo.Migrations.CreatePersons do
       add :tlf_nr, :string
       add :age, :integer
       add :week_nr, :integer
-      add :instructor, :boolean, default: false, null: false
+      add :is_instructor, :boolean, default: false, null: false
       add :parent_id, references(:persons, on_delete: :nothing)
 
       timestamps()

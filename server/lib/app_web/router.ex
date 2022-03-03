@@ -23,13 +23,18 @@ defmodule AppWeb.Router do
   scope "/api/", AppWeb.API do
     pipe_through :api
 
-    post "/users/add", PersonController, :add
-    post "/users/search", PersonController, :search
-    delete "/users/delete", PersonController, :delete
+    scope "/users" do
+      post "/add", PersonController, :add
+      post "/search", PersonController, :search
+      delete "/delete", PersonController, :delete
+    end
 
-    get "/teams/get_team_lessons_by_week/:week", CalendarController, :get_team_lessons_by_week
-    post "/teams/new", CalendarController, :add_team_and_lessons
-    post "/teams/lessons", CalendarController, :add_lessons
+    scope "/teams" do
+      get "/id/:id", CalendarController, :get_team_by_id
+      get "/weekly_schedule/:week", CalendarController, :weekly_schedule
+      post "/new", CalendarController, :add_team_and_lessons
+      post "/lessons", CalendarController, :add_lessons
+    end
   end
 
   # Other scopes may use custom stacks.

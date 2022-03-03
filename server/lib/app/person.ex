@@ -9,7 +9,7 @@ defmodule Person do
     field :tlf_nr, :string
     field :age, :integer
     field :week_nr, :integer
-    field :instructor, :boolean, default: false
+    field :is_instructor, :boolean, default: false
     field :parent_id, :id
 
     many_to_many :teaching_team, Team, join_through: "teams_persons"
@@ -22,8 +22,8 @@ defmodule Person do
   @doc false
   def changeset(person, attrs \\ %{}) do
     person
-    |> cast(attrs, [:name, :firstname, :lastname, :tlf_nr, :week_nr, :age, :instructor, :parent_id])
-    |> validate_required([:firstname, :lastname, :tlf_nr, :week_nr, :age, :instructor])
+    |> cast(attrs, [:name, :firstname, :lastname, :tlf_nr, :week_nr, :age, :is_instructor, :parent_id])
+    |> validate_required([:firstname, :lastname, :tlf_nr, :week_nr, :age, :is_instructor])
   end
 end
 
@@ -36,8 +36,7 @@ defmodule API.Person do
       from p in Person,
       where:
         p.firstname == ^person.firstname and
-        p.lastname == ^person.lastname and
-        p.tlf_nr == ^person.tlf_nr
+        p.lastname == ^person.lastname
         # p.week_nr == ^person.week_nr
     )
 
@@ -75,21 +74,24 @@ defmodule API.Person do
 
 
   def search(name, wnr, ii) do
+    name = String.downcase(name)
     name = "%#{name}%"
 
     users = from(p in Person,
-      where: like(p.name, ^name),
+      where: like(fragment("lower(?)", p.name), ^name),
       select: %{
+        id: p.id,
         firstname: p.firstname,
         lastname: p.lastname,
-        is_instructor: p.instructor,
+        is_instructor: p.is_instructor,
         nr: p.tlf_nr,
         week: p.week_nr,
       }
     ) |> App.Repo.all
 
     # Filtrer efter uge nr og om personen er en instruktør
-    Enum.filter(users, fn(user) -> Map.get(user, :week) == wnr end)
+    # Hvis man søger efter instruktører filtrere den ikke uger
+    users = Enum.filter(users, fn(user) -> (Map.get(user, :week) == wnr and not ii) or ii end)
     Enum.filter(users, fn(user) -> Map.get(user, :is_instructor) == ii end)
   end
 
