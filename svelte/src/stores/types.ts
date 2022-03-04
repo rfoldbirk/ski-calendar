@@ -17,11 +17,19 @@ export type Lesson = {
   start: string;
   end: string;
   day: Day_dk;
+  note?: string;
 }
 
 export type Team = {
   title: string;
-  students: Student[];
   week: number;
+  teacher: string;
+  students: Student[];
   lessons: Lesson[]; 
+}
+
+export type TeamLesson = {
+  title: string;
+  week: number;
+  lesson: Lesson;
 }

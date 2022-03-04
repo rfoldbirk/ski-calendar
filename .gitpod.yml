@@ -1,0 +1,14 @@
+image:
+  file: .gitpod.dockerfile
+tasks:
+  - init: |
+      sudo /etc/init.d/postgresql start
+      gp sync-done pg_start
+    command: mix phx.server
+  - init: gp sync-await pg_start
+    command: cd server
+  - init: gp sync-await pg_start
+    command: cd svelte
+ports:
+  - port: 3000-6000
+    onOpen: ignore
