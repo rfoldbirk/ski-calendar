@@ -23,7 +23,8 @@ defmodule AppWeb.API.CalendarController do
   end
 
   def weekly_schedule(conn, params) do
-    json(conn, API.Team.weekly_schedule(Map.get(params, "week")))
+    week_nr = Map.get(params, "week")
+    json(conn, API.Team.weekly_schedule(week_nr))
   end
 
 

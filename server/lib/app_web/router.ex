@@ -23,6 +23,8 @@ defmodule AppWeb.Router do
   scope "/api/", AppWeb.API do
     pipe_through :api
 
+    get "update", PageController, :fetch_from_github
+
     scope "/users" do
       post "/add", PersonController, :add
       post "/search", PersonController, :search

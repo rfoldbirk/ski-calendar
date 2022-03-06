@@ -173,6 +173,8 @@ defmodule API.Team do
         join: l in Lesson, as: :lesson, on: l.team_id == t.id
 
     from [t, lesson: l] in team_with_lessons, where: t.week == ^week, select: %{
+      lesson_id: l.id,
+      team_id: t.id,
       title: t.title,
       week: t.week,
       day: l.day,
