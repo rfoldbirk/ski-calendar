@@ -1,11 +1,13 @@
-import { useLoaderData } from "remix";
+import { Link, useLoaderData } from "remix";
 import type { LoaderFunction } from "remix";
+import { get_date, nfetch } from "~/shared/js";
 
 const days = ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"]
 
 export async function loader() {
-  let res = await fetch("http://localhost:4000/api/teams/weekly_schedule/9");
-  let lessons = await res.json()
+  let today = get_date()
+  console.log(today)
+  let lessons = await nfetch("/api/teams/weekly_schedule/9")
 
   let schedule: any = {
     "søndag": [],
@@ -29,6 +31,24 @@ export async function loader() {
 export default function Index() {
   let schedule = useLoaderData();
 
+  function _get_lesson_data(elem: HTMLElement): JSON | boolean {
+    const lesson = elem.getAttribute("data-lesson")
+
+    if (lesson) {
+      return JSON.parse(lesson)
+    }
+    
+    if (elem.parentElement)
+      return _get_lesson_data(elem.parentElement)
+
+    return false
+  }
+
+  function lessonClick({target}: {target: any}) {
+    const lesson = _get_lesson_data(target)
+    console.log(lesson)
+  }
+
   return (
     <div className="">
       {days.map( day =>
@@ -36,10 +56,12 @@ export default function Index() {
           <h1 className="m-5 text-green-400 text-4xl"> {day} </h1>
 
           {schedule[day].map( (lesson: any) =>
-            <div key={lesson.title+day} className="m-5 p-5 rounded bg-gray-800">
-              <h1 className="text-xl"> {lesson.title} </h1>
-              <p className="text-gray-400">{lesson.start_time} - {lesson.end_time}</p>
-            </div>
+            <Link to={`/lessons/${lesson.team_id}:${lesson.lesson_id}`} data-lesson={JSON.stringify(lesson)} onClick={lessonClick} key={lesson.title+day}>
+              <div className="m-5 p-5 rounded bg-gray-800 cursor-pointer hover:bg-gray-900 transition-colors duration-200">
+                <h1 className="text-xl"> {lesson.title} </h1>
+                <p className="text-gray-400">{lesson.start_time} - {lesson.end_time}</p>
+              </div>
+            </Link>
           )}
         </div>
       )}

@@ -52,7 +52,7 @@ export async function action(params: any) {
 
         console.log(team)
         
-        return await nfetch("http://localhost:4000/api/teams/new", 'post', team)
+        return await nfetch("/api/teams/new", 'post', team)
         
     }
     catch (err) {

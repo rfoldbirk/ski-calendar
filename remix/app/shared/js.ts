@@ -1,5 +1,18 @@
-export async function nfetch(url: string, method: RequestInit["method"], body?: any) {
-	const response = await fetch(url, {
+import { Lang_Days } from "./types";
+
+export async function nfetch(url: string, method: RequestInit["method"] = "get", body?: any) {
+	let baseURL = ""
+	try {
+		if (window) {
+			baseURL = ""
+		}
+	}
+	catch (err) {
+		baseURL = "http://localhost"
+	}
+
+
+	const response = await fetch(baseURL + url, {
 		method, // GET, POST, PUT, DELETE, etc.
 		mode: 'cors', // no-cors, *cors, same-origin
 		cache: 'no-cache', // default, no-cache, reload, force-cache, only-if-cached
@@ -16,10 +29,38 @@ export async function nfetch(url: string, method: RequestInit["method"], body?: 
 }
 
 
+export function get_date() {
+	let currentdate: any = new Date();
+	var oneJan: any = new Date(currentdate.getFullYear(), 0, 1);
+	var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
+	var week_number = Math.ceil((currentdate.getDay() + 1 + numberOfDays) / 7) - 1;
+
+	
+	let today = lang_days[currentdate.getDay()].dk;
+	week_number = (today == "Søndag") ? ++week_number:week_number
+
+	return {
+		"week": week_number,
+		"day": today,
+	}
+}
+
+
+export const lang_days: Lang_Days[] = [
+	{ "en": "Sunday", "dk": "Søndag" },
+	{ "en": "Monday", "dk": "Mandag" },
+	{ "en": "Tuesdag", "dk": "Tirsdag" },
+	{ "en": "Wednesday", "dk": "Onsdag" },
+	{ "en": "Thursday", "dk": "Torsdag" },
+	{ "en": "Friday", "dk": "Fredag" },
+	{ "en": "Saturday", "dk": "Lørdag" },
+  ]
+
+
 export function getWeekNumber(d: Date) {
 	d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-	d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
-	var yearStart = Number(new Date(Date.UTC(d.getUTCFullYear(),0,1)))
-	var weekNo = Math.ceil(( ( (Number(d) - yearStart) / 86400000) + 1)/7);
+	d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+	var yearStart = Number(new Date(Date.UTC(d.getUTCFullYear(), 0, 1)))
+	var weekNo = Math.ceil((((Number(d) - yearStart) / 86400000) + 1) / 7);
 	return [d.getUTCFullYear(), weekNo];
 }

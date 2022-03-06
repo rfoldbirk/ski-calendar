@@ -21,7 +21,7 @@ export async function action(params: any) {
 			parent_id: null
 		}
 		
-		return await nfetch("http://localhost:4000/api/users/add", 'post', user)
+		return await nfetch("/api/users/add", 'post', user)
 		
 	}
 	catch (err) {
