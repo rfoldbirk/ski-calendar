@@ -109,6 +109,50 @@ defmodule API.Team do
     }
   end
 
+  def add_lesson(lesson) do
+    team = App.Repo.get(Team, Map.get(lesson, "team_id"))
+    _add_lessons(team, [lesson])
+    %{status: :true}
+  end
+
+  def update_lesson(id, st, et) do
+  	{res, _} = App.Repo.get(Lesson, id)
+      |> Ecto.Changeset.change(%{start_time: st, end_time: et})
+      |> App.Repo.update()
+
+    if res == :ok do
+      %{status: :true}
+    else
+      %{status: :false, errors: ["ander det ikke"]}
+    end
+  end
+
+  def update_team(id, title, desc) do
+    {res, _} = App.Repo.get(Team, id)
+      |> Ecto.Changeset.change(%{title: title, description: desc})
+      |> App.Repo.update()
+    
+    if res == :ok do
+      %{status: :true}
+    else
+      %{status: :false, errors: ["ander det ikke"]}
+    end
+  end
+
+  def get_lesson(id) do
+    lesson = App.Repo.get(Lesson, id)
+	filter_lessons([lesson])
+      |>Enum.at(0)
+  end
+
+  def delete_lesson(id) do
+	lesson = App.Repo.get(Lesson, id)
+	case App.Repo.delete lesson do
+	  {:ok, _} -> %{status: :true}
+	  {:error} -> %{status: :false, errors: ["aner det ikke"]}
+	end
+  end
+
 
   def get_team_by_id(id?) do
     team = App.Repo.get(Team, id?) |> App.Repo.preload([:instructors, :lessons, :students])

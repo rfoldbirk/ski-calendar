@@ -1,9 +1,37 @@
 defmodule AppWeb.API.CalendarController do
   use AppWeb, :controller
 
-  def get_team_by_id(conn, %{"id" => id}) do
-    IO.puts "tissemand!!!"
+  # Lessons
 
+  def update_lesson(conn, %{"lesson_id" => id, "start_time" => st, "end_time" => et}) do
+	res = API.Team.update_lesson(id, st, et)
+	json conn, res
+  end
+
+  def add_lesson(conn, lesson) do
+	res = API.Team.get_lesson(lesson)
+	json conn, res
+  end
+
+  def get_lesson(conn, %{"id" => id}) do
+  	res = API.Team.get_lesson(id)
+
+	json conn, res
+  end
+
+  def delete_lesson(conn, %{"id" => id}) do
+	res = API.Team.delete_lesson(id)
+	IO.inspect(res)
+	json(conn, res)   
+	end
+
+  # Teams
+  def update_team(conn, %{"id" => id, "title" => title, "desc" => desc}) do
+    res = API.Team.update_team(id, title, desc)
+    json conn, res
+  end
+
+  def get_team_by_id(conn, %{"id" => id}) do
     res = API.Team.get_team_by_id(id)
 
     json(conn, res)

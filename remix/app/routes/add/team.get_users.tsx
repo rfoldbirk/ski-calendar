@@ -14,7 +14,7 @@ type user = {
 }
 
 
-export default function GetUsers({is_instructor}: { is_instructor: boolean }) {
+export default function GetUsers({is_instructor, week_nr}: { is_instructor: boolean, week_nr: number }) {
 
     const usersf = useFetcher();
     const ref = useRef(null);
@@ -29,7 +29,7 @@ export default function GetUsers({is_instructor}: { is_instructor: boolean }) {
     async function handleChange({target}: {target: HTMLInputElement}) {
         let res = await nfetch("/api/users/search", "post", {
             "name": target.value,
-            "weeknr": 9,
+            "weeknr": Number(week_nr.current?.value),
             "is_instructor": is_instructor,
         })
 
@@ -61,13 +61,13 @@ export default function GetUsers({is_instructor}: { is_instructor: boolean }) {
         set_selusers(selected_users => [...selected_users, user])
     }
 
-    return <div className="mt-2 p-5 border-green-400 border-2 rounded">
+    return <div className="mt-2 pl-2 border-red-400 border-l-4 ">
         {selected_users.map( user => <div key={"h"+user.id}>
             <input type="hidden" className="bg-gray-900" name={is_instructor ? "instructor" : "student"} defaultValue={String(user.id)} />
         </div>)}
 
 
-        <input placeholder={is_instructor ? "Tilføj instruktør" : "Tilføj elev"} onChange={handleChange} className="bg-gray-800 w-full p-3 rounded outline-none text-center" type="text"/>
+        <input onFocus={handleChange} placeholder={is_instructor ? "Tilføj instruktør" : "Tilføj elev"} onChange={handleChange} className="bg-gray-800 w-full p-3 rounded outline-none " type="text"/>
 
         {users.map( user => <div key={"u"+user.id} className="bg-gray-900 m-2 p-2 rounded">
             {user.firstname} {user.lastname}

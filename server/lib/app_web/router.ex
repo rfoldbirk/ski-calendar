@@ -36,7 +36,15 @@ defmodule AppWeb.Router do
       get "/weekly_schedule/:week", CalendarController, :weekly_schedule
       post "/new", CalendarController, :add_team_and_lessons
       post "/lessons", CalendarController, :add_lessons
+      post "/update", CalendarController, :update_team
     end
+
+	scope "/lessons" do
+		get "/:id", CalendarController, :get_lesson 
+		post "/add", CalendarController, :add_lesson
+		post "/update", CalendarController, :update_lesson
+		delete "/delete/:id", CalendarController, :delete_lesson
+	end
   end
 
   # Other scopes may use custom stacks.

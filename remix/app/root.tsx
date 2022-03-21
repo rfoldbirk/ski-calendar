@@ -7,7 +7,7 @@ export function links() {
 import { NavLink, Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "remix";
 import type { MetaFunction } from "remix";
 
-let link_style = "text-xl p-5 cursor-pointer"
+let link_style = "text-lg p-2 cursor-pointer"
 
 export const meta: MetaFunction = () => {
   return { title: "SSO" };
@@ -31,7 +31,7 @@ export default function App() {
             <Scripts />
             <LiveReload />
           </div>
-          <footer className="fixed bottom-0 grid grid-cols-2 text-center bg-gray-800 w-full">
+          <footer className="fixed bottom-0 grid grid-cols-2 text-center bg-gray-300 dark:bg-gray-800 w-full">
             <NavLink to="" className={link_style}>
               Skema
             </NavLink>

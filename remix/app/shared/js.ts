@@ -33,11 +33,12 @@ export function get_date() {
 	let currentdate: any = new Date();
 	var oneJan: any = new Date(currentdate.getFullYear(), 0, 1);
 	var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
-	var week_number = Math.ceil((currentdate.getDay() + 1 + numberOfDays) / 7) - 1;
-
+	var week_number = getWeekNumber(currentdate)[1]
 	
 	let today = lang_days[currentdate.getDay()].dk;
 	week_number = (today == "Søndag") ? ++week_number:week_number
+
+	console.log(week_number)
 
 	return {
 		"week": week_number,
